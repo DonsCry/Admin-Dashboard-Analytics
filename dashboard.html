@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Analytics & Management</title>
+    <meta name="description" content="Professional admin dashboard for analytics, order management, and business insights">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #0a0a0f;
+            --foreground: #ffffff;
+            --card: #1a1a24;
+            --card-hover: #24243a;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #2d2d44;
+            --muted: #71717a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 100%);
+            color: var(--foreground);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 30;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-text h2 {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: var(--card-hover);
+            color: var(--foreground);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--foreground);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-item .icon {
+            font-size: 1.25rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--danger);
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            width: calc(100% - 260px);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(26, 26, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--foreground);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .menu-toggle:hover {
+            background: var(--card-hover);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-hover);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            width: 320px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--foreground);
+            width: 100%;
+            font-size: 0.875rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: transparent;
+            border: none;
+            color: var(--foreground);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .notification-btn:hover {
+            background: var(--card-hover);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--border);
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info p {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .user-info span {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Section */
+        .welcome {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .welcome h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            color: var(--muted);
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: rgba(26, 26, 36, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+        .kpi-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .kpi-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .kpi-title {
+            font-size: 0.875rem;
+            color: var(--muted);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .kpi-change.positive {
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger);
+        }
+
+        .kpi-change-text {
+            font-weight: 600;
+        }
+
+        .kpi-change-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 26, 36, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-title p {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .chart-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Table */
+        .table-card {
+            background: rgba(26, 26, 36, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .table-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-title h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .table-title p {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        th:hover {
+            color: var(--primary);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--card-hover);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: var(--card-hover);
+            border: none;
+            color: var(--foreground);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--border);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .welcome h1 {
+                font-size: 1.5rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-wrapper {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">A</div>
+                <div class="logo-text">
+                    <h2>Admin</h2>
+                    <p>Dashboard</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon">🛒</span>
+                    <span>Orders</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon">👥</span>
+                    <span>Users</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="search-bar">
+                        <span>🔍</span>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="notification-btn">
+                        🔔
+                        <span class="notification-badge"></span>
+                    </button>
+
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <p>Admin User</p>
+                            <span>admin@example.com</span>
+                        </div>
+                        <div class="user-avatar">A</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="content">
+                <div class="content-wrapper">
+                    <!-- Welcome Section -->
+                    <div class="welcome">
+                        <h1>Dashboard Analytics</h1>
+                        <p>Welcome back! Here's what's happening with your business today.</p>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #10b981, #059669);">💰</div>
+                            <div class="kpi-title">Total Revenue</div>
+                            <div class="kpi-value">$45,231</div>
+                            <div class="kpi-change positive">
+                                <span class="kpi-change-text">↑ +20.1%</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">🛒</div>
+                            <div class="kpi-title">Total Orders</div>
+                            <div class="kpi-value">2,456</div>
+                            <div class="kpi-change positive">
+                                <span class="kpi-change-text">↑ +15.3%</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">👥</div>
+                            <div class="kpi-title">Active Users</div>
+                            <div class="kpi-value">8,234</div>
+                            <div class="kpi-change positive">
+                                <span class="kpi-change-text">↑ +8.2%</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);">📈</div>
+                            <div class="kpi-title">Conversion Rate</div>
+                            <div class="kpi-value">3.24%</div>
+                            <div class="kpi-change negative">
+                                <span class="kpi-change-text">↓ -2.4%</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">💳</div>
+                            <div class="kpi-title">Avg. Order Value</div>
+                            <div class="kpi-value">$18.42</div>
+                            <div class="kpi-change positive">
+                                <span class="kpi-change-text">↑ +12.5%</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background: linear-gradient(135deg, #eab308, #ca8a04);">⭐</div>
+                            <div class="kpi-title">Customer Satisfaction</div>
+                            <div class="kpi-value">4.8/5</div>
+                            <div class="kpi-change positive">
+                                <span class="kpi-change-text">↑ +0.3</span>
+                                <span class="kpi-change-label">vs last month</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title">
+                                    <h3>Revenue Trend</h3>
+                                    <p>Monthly revenue overview</p>
+                                </div>
+                                <div class="chart-badge">+12.5%</div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title">
+                                    <h3>Product Revenue</h3>
+                                    <p>Top selling products</p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">
+                                <h3>Recent Orders</h3>
+                                <p>Manage and track your orders</p>
+                            </div>
+                            <div class="search-bar">
+                                <span>🔍</span>
+                                <input type="text" placeholder="Search orders..." id="searchInput">
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table id="ordersTable">
+                                <thead>
+                                    <tr>
+                                        <th onclick="sortTable(0)">Order ID</th>
+                                        <th onclick="sortTable(1)">Customer</th>
+                                        <th onclick="sortTable(2)">Product</th>
+                                        <th onclick="sortTable(3)">Amount</th>
+                                        <th onclick="sortTable(4)">Status</th>
+                                        <th onclick="sortTable(5)">Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Data will be inserted by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            <div class="pagination-info" id="paginationInfo">
+                                Showing 1 to 5 of 10 orders
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="pagination-btn" onclick="changePage(-1)">Previous</button>
+                                <button class="pagination-btn active" onclick="changePage(0, 1)">1</button>
+                                <button class="pagination-btn" onclick="changePage(0, 2)">2</button>
+                                <button class="pagination-btn" onclick="changePage(1)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Sample Data
+        const orders = [
+            { id: '#12345', customer: 'John Doe', product: 'Laptop Pro 15"', amount: '$1,299', status: 'success', date: '2024-11-28' },
+            { id: '#12346', customer: 'Jane Smith', product: 'Wireless Mouse', amount: '$29', status: 'success', date: '2024-11-28' },
+            { id: '#12347', customer: 'Bob Johnson', product: 'Mechanical Keyboard', amount: '$149', status: 'pending', date: '2024-11-27' },
+            { id: '#12348', customer: 'Alice Brown', product: 'USB-C Hub', amount: '$79', status: 'success', date: '2024-11-27' },
+            { id: '#12349', customer: 'Charlie Wilson', product: 'Monitor 27"', amount: '$399', status: 'danger', date: '2024-11-26' },
+            { id: '#12350', customer: 'Diana Martinez', product: 'Webcam HD', amount: '$89', status: 'success', date: '2024-11-26' },
+            { id: '#12351', customer: 'Evan Davis', product: 'Headphones Pro', amount: '$199', status: 'pending', date: '2024-11-25' },
+            { id: '#12352', customer: 'Fiona Garcia', product: 'SSD 1TB', amount: '$129', status: 'success', date: '2024-11-25' },
+            { id: '#12353', customer: 'George Lee', product: 'Graphics Card', amount: '$599', status: 'success', date: '2024-11-24' },
+            { id: '#12354', customer: 'Hannah White', product: 'RAM 32GB', amount: '$159', status: 'pending', date: '2024-11-24' },
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let filteredOrders = [...orders];
+
+        // Render Table
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageOrders = filteredOrders.slice(start, end);
+
+            tableBody.innerHTML = pageOrders.map(order => `
+                <tr>
+                    <td style="font-family: monospace; font-size: 0.875rem;">${order.id}</td>
+                    <td style="font-weight: 500;">${order.customer}</td>
+                    <td style="color: var(--muted);">${order.product}</td>
+                    <td style="font-weight: 600;">${order.amount}</td>
+                    <td><span class="badge badge-${order.status}">${order.status === 'success' ? 'Completed' : order.status === 'pending' ? 'Pending' : 'Failed'}</span></td>
+                    <td style="color: var(--muted);">${order.date}</td>
+                    <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
+                </tr>
+            `).join('');
+
+            // Update pagination info
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${start + 1} to ${Math.min(end, filteredOrders.length)} of ${filteredOrders.length} orders`;
+        }
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredOrders = orders.filter(order => 
+                order.customer.toLowerCase().includes(searchTerm) ||
+                order.product.toLowerCase().includes(searchTerm) ||
+                order.id.toLowerCase().includes(searchTerm)
+            );
+            currentPage = 1;
+            renderTable();
+        });
+
+        // Pagination
+        function changePage(direction, page) {
+            if (page) {
+                currentPage = page;
+            } else {
+                currentPage += direction;
+            }
+            
+            const maxPage = Math.ceil(filteredOrders.length / itemsPerPage);
+            currentPage = Math.max(1, Math.min(currentPage, maxPage));
+            
+            renderTable();
+        }
+
+        // Sort Table
+        let sortDirection = {};
+        function sortTable(columnIndex) {
+            const key = ['id', 'customer', 'product', 'amount', 'status', 'date'][columnIndex];
+            
+            if (!sortDirection[key]) sortDirection[key] = 'asc';
+            else sortDirection[key] = sortDirection[key] === 'asc' ? 'desc' : 'asc';
+            
+            filteredOrders.sort((a, b) => {
+                const aVal = a[key];
+                const bVal = b[key];
+                
+                if (sortDirection[key] === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+            
+            renderTable();
+        }
+
+        // Initialize
+        renderTable();
+
+        // Charts using Canvas
+        function drawLineChart() {
+            const canvas = document.getElementById('lineChart');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            const data = [4000, 3000, 5000, 4500, 6000, 5500];
+            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const max = Math.max(...data);
+            const padding = 40;
+            const chartWidth = canvas.width - padding * 2;
+            const chartHeight = canvas.height - padding * 2;
+
+            // Draw grid
+            ctx.strokeStyle = '#2d2d44';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+
+            // Draw line
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = padding + chartHeight - (value / max) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+
+            // Draw points
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = padding + chartHeight - (value / max) * chartHeight;
+                
+                ctx.fillStyle = '#6366f1';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw labels
+            ctx.fillStyle = '#71717a';
+            ctx.font = '12px Inter';
+            ctx.textAlign = 'center';
+            
+            labels.forEach((label, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                ctx.fillText(label, x, canvas.height - 10);
+            });
+        }
+
+        function drawBarChart() {
+            const canvas = document.getElementById('barChart');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            const data = [4000, 3000, 2000, 2780, 1890];
+            const labels = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'];
+            const max = Math.max(...data);
+            const padding = 40;
+            const chartWidth = canvas.width - padding * 2;
+            const chartHeight = canvas.height - padding * 2;
+            const barWidth = chartWidth / data.length * 0.6;
+            const gap = chartWidth / data.length * 0.4;
+
+            // Draw bars
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / data.length) * index + gap / 2;
+                const barHeight = (value / max) * chartHeight;
+                const y = padding + chartHeight - barHeight;
+                
+                const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
+                gradient.addColorStop(0, '#6366f1');
+                gradient.addColorStop(1, '#8b5cf6');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth, barHeight);
+            });
+
+            // Draw labels
+            ctx.fillStyle = '#71717a';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'center';
+            
+            labels.forEach((label, index) => {
+                const x = padding + (chartWidth / data.length) * index + (chartWidth / data.length) / 2;
+                ctx.fillText(label, x, canvas.height - 10);
+            });
+        }
+
+        // Draw charts on load
+        window.addEventListener('load', () => {
+            drawLineChart();
+            drawBarChart();
+        });
+
+        // Redraw on resize
+        window.addEventListener('resize', () => {
+            drawLineChart();
+            drawBarChart();
+        });
+    </script>
+</body>
+</html>
