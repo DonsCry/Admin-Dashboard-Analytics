@@ -1,3 +1,45 @@
+# Admin Dashboard Analytics  
+
+> 🎯 **Sebuah dashboard admin modern dan responsif**, dibangun dengan fokus pada UI/UX profesional, struktur kode bersih, dan pengalaman pengguna optimal — cocok sebagai portofolio nyata frontend developer.
+
+---
+
+## 🔎 Sekilas  
+
+Admin Dashboard Analytics adalah dashboard berbasis web untuk menampilkan data analitik dan metrik — dengan KPI cards, chart interaktif, data table, navigasi sidebar, dan dukungan tema Light/Dark. Proyek ini dirancang agar mudah dikembangkan, dipelihara, dan dikustomisasi — ideal untuk menunjukkan kemampuan frontend dan layout kompleks kepada calon klien atau pemberi kerja.
+
+---
+
+## 🧰 Teknologi & Stack  
+
+| Stack / Teknologi       | Detail / Versi / Catatan                      |
+|-------------------------|-----------------------------------------------|
+| **Framework / Library** | Next.js + React (TypeScript)             |
+| Styling / CSS           | CSS Modules / global CSS + konfigurasi via PostCSS / optional Tailwind-CSS (jika disesuaikan) |
+| Charts / Visualisasi    | Komponen chart & grafik (custom / eksternal) — misalnya library chart (Chart.js / Recharts / dll) |
+| Struktur Komponen       | Komponen terpisah: Sidebar, Navbar/Header, KPICards, Charts, DataTable, Layout, dll — mendukung reuse & skalabilitas |
+| Build & Tools           | Build system via Next.js, konfigurasi linting (eslint), bundling & optimisasi default Next.js |
+
+---
+
+## 📁 Struktur Proyek (contoh)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
