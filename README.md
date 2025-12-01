@@ -1,13 +1,26 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  <img src="https://img.shields.io/github/last-commit/DonsCry/Admin-Dashboard-Analytics" />
-  <img src="https://img.shields.io/badge/Lighthouse-95%2B-brightgreen" />
-  <img src="https://img.shields.io/badge/Responsive-Mobile%20Ready-blue" />
-  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" />
-  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg" />
-</p>
 
 # Admin Dashboard Analytics
+<!-- TECH STACK -->
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+
+<!-- QUALITY -->
+![Responsive](https://img.shields.io/badge/Responsive-Yes-00b894?style=flat)
+![Dashboard](https://img.shields.io/badge/UI-Dashboard-0984e3?style=flat)
+![Charts](https://img.shields.io/badge/Charts-Enabled-6c5ce7?style=flat)
+
+<!-- STATUS -->
+![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat)
+![Status](https://img.shields.io/badge/Status-Production_Ready-brightgreen?style=flat)
+![Last Update](https://img.shields.io/badge/Updated-Active-success?style=flat)
+
+<!-- LICENSE -->
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)
+
 <p align="center">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   <img src="https://img.shields.io/github/last-commit/DonsCry/Admin-Dashboard-Analytics" />
