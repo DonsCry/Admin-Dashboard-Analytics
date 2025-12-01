@@ -1,3 +1,23 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  <img src="https://img.shields.io/github/last-commit/DonsCry/Admin-Dashboard-Analytics" />
+  <img src="https://img.shields.io/badge/Lighthouse-95%2B-brightgreen" />
+  <img src="https://img.shields.io/badge/Responsive-Mobile%20Ready-blue" />
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" />
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg" />
+</p>
+
+# Admin Dashboard Analytics
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  <img src="https://img.shields.io/github/last-commit/DonsCry/Admin-Dashboard-Analytics" />
+  <img src="https://img.shields.io/badge/Lighthouse-95%2B-brightgreen" />
+  <img src="https://img.shields.io/badge/Responsive-Mobile%20Ready-blue" />
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" />
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg" />
+</p>
+
+
 # Admin Dashboard Analytics  
 
 > 🎯 **Sebuah dashboard admin modern dan responsif**, dibangun dengan fokus pada UI/UX profesional, struktur kode bersih, dan pengalaman pengguna optimal — cocok sebagai portofolio nyata frontend developer.
